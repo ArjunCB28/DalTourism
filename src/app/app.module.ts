@@ -13,6 +13,8 @@ import { HomeComponent } from './home/home.component';
 import { SignupComponent } from './signup/signup.component';
 import { OtpvalidateComponent } from './otpvalidate/otpvalidate.component';
 
+import { UtilsService } from './utils.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +31,7 @@ import { OtpvalidateComponent } from './otpvalidate/otpvalidate.component';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [UtilsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

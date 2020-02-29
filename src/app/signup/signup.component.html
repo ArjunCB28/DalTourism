@@ -1,6 +1,7 @@
 <div class="signup-wrapper">
 	<div class="signup box-shadow">
 		<form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+			<h3>Create account</h3>
 			<input class="ng-invalid" type="text" placeholder="first name" formControlName="firstName">
 			<input class="ng-invalid" type="text" placeholder="last name" formControlName="lastName">
 			<input class="ng-invalid" type="text" placeholder="email id" formControlName="emailId">

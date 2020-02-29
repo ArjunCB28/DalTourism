@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from "@angular/router";
 import { FormGroup, FormControl } from '@angular/forms';
+import { HttpHeaders } from '@angular/common/http';
+
+
+import { UtilsService } from '../utils.service';
 
 @Component({
 	selector: 'app-signup',
@@ -11,10 +15,17 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class SignupComponent implements OnInit {
 
 	private signupForm : FormGroup;
+	private httpOptions = {
+	  headers: new HttpHeaders({
+	    'Content-Type':  'application/json',
+	    'Authorization': 'my-auth-token'
+	  })
+	};
 
-	constructor(private http : HttpClient, private router : Router) {
+	constructor(private http : HttpClient, private router : Router, private utils : UtilsService) {
 		this.http = http;
 		this.router = router;
+		this.utils = utils;
 	}
 
 	ngOnInit(): void {
@@ -28,9 +39,15 @@ export class SignupComponent implements OnInit {
 	}
 
 	onSubmit() {
-		// TODO: Use EventEmitter with form value
-		this.router.navigate(['/otp']);
-		console.warn(this.signupForm.value);
+		var jsonData = this.utils.encode(this.signupForm.value);
+		console.warn(jsonData);
+		const url : string = "http://127.0.0.1:5000/signup";
+		this.http.post<any>(url,JSON.stringify(jsonData), this.httpOptions).subscribe(data => {
+		    if(data && +data.status === 200){
+		    	this.router.navigate(['/otp']);
+		    	console.log("hello success");
+		    }
+		});
 	}
 
 }
