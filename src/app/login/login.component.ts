@@ -19,7 +19,18 @@ export class LoginComponent implements OnInit {
 	ngOnInit() {
 	}
 
+	validateLogin(): any{
+		if(this.emailId === "" || this.password === ""){
+			window.alert("Invalid credentials");
+			return false;
+		}
+		return true;
+	}
+
 	login(){
+		if(!this.validateLogin()){
+			return;
+		}
 		const url : string = "http://127.0.0.1:5000/login?email=" + this.emailId + "&password=" + this.password;
 		this.http.get<any>(url).subscribe(data => {
 		    if(data && +data.status === 200){

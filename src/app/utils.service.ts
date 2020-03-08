@@ -7,7 +7,6 @@ export class UtilsService {
 
 
 	private encodeString(str) {
-		console.log(str);
 		var outputString = "";
 		var tmp = str.charAt(0);
 		var count = 1;

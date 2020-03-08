@@ -38,14 +38,24 @@ export class SignupComponent implements OnInit {
 		});
 	}
 
+	validateData(): any {
+		if(!this.signupForm.value.firstName || !this.signupForm.value.lastName || !this.signupForm.value.emailId || !this.signupForm.value.password || !this.signupForm.value.repassword){
+			window.alert("Incomplete form");
+			return false;
+		}
+		return true;
+	}
+
 	onSubmit() {
+		if(!this.validateData()){
+			return;
+		}
 		var jsonData = this.utils.encode(this.signupForm.value);
-		console.warn(jsonData);
+		console.log(jsonData);
 		const url : string = "http://127.0.0.1:5000/signup";
 		this.http.post<any>(url,JSON.stringify(jsonData), this.httpOptions).subscribe(data => {
 		    if(data && +data.status === 200){
 		    	this.router.navigate(['/otp']);
-		    	console.log("hello success");
 		    }
 		});
 	}

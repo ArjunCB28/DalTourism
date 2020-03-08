@@ -13,7 +13,7 @@ export class AppComponent {
 
   constructor(private router: Router) {
   	this.router = router;
-  	this.router.navigate(['/signup']);
+  	this.router.navigate(['/home']);
   }
 
   toggleMoreOptions(){

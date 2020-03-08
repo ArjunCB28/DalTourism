@@ -1,9 +1,11 @@
 from flask import Flask,request
 from flask_cors import CORS, cross_origin
+import json
 
 import smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+
 
 
 # 2-factor authentication part
@@ -45,16 +47,16 @@ def sendOTP(receiver_email):
 
 # data encoding and decoding
 
-public String decode(String str) {
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < str.length(); i += 2) {
-        int count = Integer.valueOf("" + str.charAt(i + 1));
-        for (int j = 0; j < count; j++) {
-            sb.append(str.charAt(i));
-        }
-    }
-    return sb.toString();
-}
+# public String decode(String str) {
+#     StringBuilder sb = new StringBuilder();
+#     for (int i = 0; i < str.length(); i += 2) {
+#         int count = Integer.valueOf("" + str.charAt(i + 1));
+#         for (int j = 0; j < count; j++) {
+#             sb.append(str.charAt(i));
+#         }
+#     }
+#     return sb.toString();
+# }
 
 
 app = Flask(__name__)
@@ -72,6 +74,7 @@ loginFailure = {}
 @app.route('/login', methods = ['GET'])
 @cross_origin()
 def login():
+	# perform login check
     return loginSuccess
 
 # signup endpoint
@@ -82,6 +85,17 @@ def signup():
 	data = request.get_json()
 	print(data['emailId'])
 	return loginSuccess
+
+# search for locations endpoint
+@app.route('/locations', methods = ['GET'])
+@cross_origin()
+def locations():
+	request.args.get('locationName')
+
+	# replace the below logic with db request
+	with open('locations.json') as json_file:
+		data = json.load(json_file)
+		return data
 
 if __name__ == '__main__':
     app.run()

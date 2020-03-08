@@ -1,0 +1,27 @@
+{
+	"locations": [{
+		"id":1,
+		"name":"Peggy's cove",
+		"province": "Nova Scotia",
+		"price": "350.00",
+		"distance": "45 miles"
+	},{
+		"id":2,
+		"name":"Peggy's cove",
+		"province": "Nova Scotia",
+		"price": "350.00",
+		"distance": "45 miles"
+	},{
+		"id":3,
+		"name":"Peggy's cove",
+		"province": "Nova Scotia",
+		"price": "350.00",
+		"distance": "45 miles"
+	},{
+		"id":4,
+		"name":"Peggy's cove",
+		"province": "Nova Scotia",
+		"price": "350.00",
+		"distance": "45 miles"
+	}]
+}
