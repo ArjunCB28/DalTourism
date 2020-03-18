@@ -14,6 +14,10 @@ import { SignupComponent } from './signup/signup.component';
 import { OtpvalidateComponent } from './otpvalidate/otpvalidate.component';
 
 import { UtilsService } from './utils.service';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { LocationComponent } from './location/location.component';
+import { PaymentComponent } from './payment/payment.component';
+import { TicketComponent } from './ticket/ticket.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +25,10 @@ import { UtilsService } from './utils.service';
     LoginComponent,
     HomeComponent,
     SignupComponent,
-    OtpvalidateComponent
+    OtpvalidateComponent,
+    LocationComponent,
+    PaymentComponent,
+    TicketComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +36,8 @@ import { UtilsService } from './utils.service';
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgSelectModule
   ],
   providers: [UtilsService],
   bootstrap: [AppComponent]

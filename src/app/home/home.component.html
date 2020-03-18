@@ -1,3 +1,11 @@
 <div class="home-wrapper">
-	<input type="text" name="search" [(ngModel)]="searchInput" (ngModelChange)="inputChanged()">
+    <input type="text" name="" matInput>
+	<div class="location-wrapper" *ngFor="let location of searchData; index as i; trackBy: trackByFn" (click)="locationSelected(location);">
+		<h4>{{location.name}}</h4> <h4 class="price">$ {{location.price}}</h4>
+		<div>
+			<div class="description">{{location.description}}</div>
+			<div class="province">{{location.province}}&nbsp;{{location.distance}}</div>
+		</div>
+	</div>
+	<div class="show-tickets" (click)="showTickets()">Tickets</div>
 </div>

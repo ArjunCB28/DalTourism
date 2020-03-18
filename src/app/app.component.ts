@@ -9,11 +9,14 @@ import { Router } from "@angular/router";
 export class AppComponent {
   title = 'DalTourism';
 
-  isMoreOptionsOpen = false; 
+  isMoreOptionsOpen = false;
+  selectedCountry = "";
+
+  ngOnInit() {};
 
   constructor(private router: Router) {
   	this.router = router;
-  	this.router.navigate(['/home']);
+  	this.router.navigate(['/login']);
   }
 
   toggleMoreOptions(){

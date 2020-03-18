@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { UtilsService } from '../utils.service';
 import { Router } from "@angular/router";
 
 @Component({
@@ -9,16 +9,26 @@ import { Router } from "@angular/router";
 })
 export class OtpvalidateComponent implements OnInit {
 
-	constructor(private http : HttpClient, private router : Router) {
-		this.http = http;
+	private otp:string;
+	constructor(private utils : UtilsService, private router : Router) {
+		this.utils = utils;
 		this.router = router;
-	}
 
+		if(this.utils.getUserId() === 0){
+			this.router.navigate(['/login']);
+		}
+	}
 
 	ngOnInit() {
 	}
 
 	validate(){
-		
+		const url : string = "validateOTP"
+		const jsonData = {"otp":this.otp};
+		this.utils.httpPostRequest(url, jsonData).subscribe(data => {
+			if(data && +data.status === 200){
+				this.router.navigate(['/home']);
+			}
+		});
 	}
 }

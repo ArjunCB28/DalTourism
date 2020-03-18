@@ -1,0 +1,13 @@
+<div class="payment-wrapper">
+	<h3>Secure Payments</h3>
+	<p>Your credit or debit card information will be kept encrypted and secure</p>
+	<img src="assets/payment.png">
+	<p>Payment Amount: $ {{price}}</p>
+	<input type="text" name="cardNumber" placeholder="Enter card number" class="card-number" [(ngModel)]="cardNumber">
+	<input type="text" name="expiryMonth" placeholder="MM" class="expiryDate" [(ngModel)]="expMonth">
+	<input type="text" name="expiryYear" placeholder="YY" class="expiryDate" [(ngModel)]="expYear"><br>
+
+	<input type="text" name="securityCode" placeholder="Security Code" class="securityCode" [(ngModel)]="securityCode">
+	<span> 3 digits on back of your card</span>
+	<button (click)="processPayment();">Continue</button>
+</div>

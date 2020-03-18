@@ -15,17 +15,17 @@
 }
 
 .signup-wrapper {
-    width: 100%;
-    height: 100%;
-    padding: 10% 0px;
-    box-sizing: border-box;
+    width: 50%;
+    height: 50%;
     text-align: center;
+    margin: auto;
 }
 
 .signup {
     padding: 30px 20px;
     box-sizing: border-box;
     width: 95%;
+    margin-top: 5%;
     border: 1px solid #8080803d;
     display: inline-block;
     border-radius: 5px;
@@ -56,5 +56,16 @@
         color: white;
         font-weight: bold;
         outline: none;
+    }
+}
+
+
+@media only screen and (max-width: 600px) {
+    .signup-wrapper {
+        width: 100%;
+        height: 100%;
+    }
+    .signup {
+        margin-top: 25%;
     }
 }

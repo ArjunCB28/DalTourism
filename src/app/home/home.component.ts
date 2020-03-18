@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from "@angular/router";
+import { UtilsService } from '../utils.service';
+
 
 @Component({
 	selector: 'app-home',
@@ -10,30 +11,32 @@ import { Router } from "@angular/router";
 export class HomeComponent implements OnInit {
 
 	private searchInput = "";
-	constructor(private http : HttpClient, private router : Router) {
-		this.http = http;
-	  	this.router = router;
-	}
+	private selectedData;
+	private searchData = [];
+	constructor(private router : Router, private utils : UtilsService) {
+		this.router = router;
+		this.utils = utils;
 
-	ngOnInit() {
-	}
-
-	searchLocations(): void {
-		const url : string = "http://127.0.0.1:5000/locations?locationName="+this.searchInput;
-		this.http.get<any>(url).subscribe(data => {
-		    if(data && +data.status === 200){
-		    	this.router.navigate(['/home']);
-		    }
+		const url : string = "locations";
+		this.utils.httpGetRequest(url).subscribe(data => {
+			if(data && +data.status === 200){
+				console.log(data.data.locations);
+				this.searchData = this.utils.decodeArray(data.data.locations);
+			}
 		});
 	}
 
-	inputChanged(){
-		console.log(this.searchInput);
-		if(this.searchInput && this.searchInput.length > 0){
-			this.searchLocations();
-		}
-		// locationName
+	ngOnInit() {};
 
+	locationSelected(location){
+		this.utils.setLocation(location);
+		this.router.navigate(['/location']);
+	};
+
+	inputChanged(){}
+
+	showTickets(){
+		this.router.navigate(['/ticket']);
 	}
 
 }

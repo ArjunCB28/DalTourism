@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from "@angular/router";
+import { UtilsService } from '../utils.service';
 
 @Component({
 	selector: 'app-login',
@@ -11,8 +11,9 @@ export class LoginComponent implements OnInit {
 
 	private emailId : string = "";
 	private password : string = "";
-	constructor(private http : HttpClient, private router : Router) {
-		this.http = http;
+
+	constructor(private router : Router, private utils : UtilsService) {
+		this.utils = utils;
 	  	this.router = router;
 	}
 
@@ -27,15 +28,20 @@ export class LoginComponent implements OnInit {
 		return true;
 	}
 
+
 	login(){
 		if(!this.validateLogin()){
 			return;
 		}
-		const url : string = "http://127.0.0.1:5000/login?email=" + this.emailId + "&password=" + this.password;
-		this.http.get<any>(url).subscribe(data => {
-		    if(data && +data.status === 200){
-		    	this.router.navigate(['/home']);
-		    }
+		const url : string = "login";
+		const jsonData = {"email":this.emailId,"password":this.password}
+		this.utils.httpPostRequest(url,jsonData).subscribe(data => {
+			if(data && +data.status === 200){
+				console.log(data.userId)
+				console.log(data)
+				this.utils.setUserId(data.userId);
+				this.router.navigate(['/home']);
+			}
 		});
 	}
 

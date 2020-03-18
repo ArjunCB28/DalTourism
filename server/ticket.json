@@ -1,0 +1,14 @@
+{
+	"ticket": {
+		"userId":1,
+		"locationName":"Peggy's cove",
+		"description": "Peggy's Cove is a small rural community located on the eastern shore of St. Margarets Bay in Nova Scotia's Halifax Regional Municipality, which is the site of Peggys Point Lighthouse",
+		"province": "Nova Scotia",
+		"distance": "45 miles",
+		"date":"2020-12-12",
+		"price": "150.00",
+		"overallPrice": "350.00",
+		"tickets": "3",
+		"ticketCode":"AQSD1F345"
+	}
+}

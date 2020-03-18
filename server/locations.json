@@ -2,26 +2,30 @@
 	"locations": [{
 		"id":1,
 		"name":"Peggy's cove",
+		"description": "Peggy's Cove is a small rural community located on the eastern shore of St. Margarets Bay in Nova Scotia's Halifax Regional Municipality, which is the site of Peggys Point Lighthouse",
 		"province": "Nova Scotia",
-		"price": "350.00",
+		"price": "150.00",
 		"distance": "45 miles"
 	},{
 		"id":2,
-		"name":"Peggy's cove",
+		"name":"Herring cove",
+		"description":"Herring Cove is a Canadian suburban and former fishing community in Nova Scotia's Halifax Regional Municipality. It is situated on the eastern shore of the Chebucto Peninsula, 15 kilometres south of Downtown Halifax",
 		"province": "Nova Scotia",
-		"price": "350.00",
-		"distance": "45 miles"
+		"price": "120.00",
+		"distance": "35 miles"
 	},{
 		"id":3,
-		"name":"Peggy's cove",
+		"name":"Lunenburg",
+		"description":"Lunenburg is a port town on the South Shore of Nova Scotia, Canada. Founded in 1753, the town was one of the first British attempts to settle Protestants in Nova Scotia in an effort to displace the French colonial Roman Catholic Acadians and indigenous Mi'kmaq",
 		"province": "Nova Scotia",
-		"price": "350.00",
-		"distance": "45 miles"
+		"price": "450.00",
+		"distance": "150 miles"
 	},{
 		"id":4,
-		"name":"Peggy's cove",
+		"name":"Point pleasant park",
+		"description":"Point Pleasant Park is a large, mainly forested municipal park at the southern tip of the Halifax peninsula. It once hosted several artillery batteries, and still contains the Prince of Wales Tower - the oldest Martello tower in North America",
 		"province": "Nova Scotia",
-		"price": "350.00",
-		"distance": "45 miles"
+		"price": "70.00",
+		"distance": "15 miles"
 	}]
 }

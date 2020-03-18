@@ -1,0 +1,68 @@
+@color-blue: #2196F3;
+
+.payment-wrapper {
+	box-sizing: border-box;
+	padding: 20px;
+	width: 50%;
+
+	h3 {
+		text-align: center;
+	}
+
+	p {
+		text-align: center;
+	}
+
+	.card-number {
+		width: 100%;
+	}
+
+	.expiryDate {
+		width: 30%;
+	}
+
+	.securityCode {
+		width: 45%;
+	}
+
+	img {
+		width: 100%;
+	}
+	span {
+		font-size: 12px;
+	}
+}
+
+input {
+	height: 50px;
+	border-radius: 5px;
+	outline: none;
+	width: 100%;
+	margin-bottom: 25px;
+	padding: 5px 15px;
+	font-size: 15px;
+	box-sizing: border-box;
+	border: 1px solid grey;
+}
+
+input:focus {
+	transition: 0.5s;
+	border: 1px solid @color-blue;
+}
+
+button {
+	height: 40px;
+	width: 100%;
+	border-radius: 5px;
+	border: 1px solid @color-blue;
+	background: @color-blue;
+	color: white;
+	font-weight: bold;
+	outline: none;
+}
+
+@media only screen and (max-width: 600px) {
+	.payment-wrapper {
+		width: 100%;
+	}
+}

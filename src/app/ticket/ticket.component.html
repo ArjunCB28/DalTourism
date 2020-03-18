@@ -1,0 +1,15 @@
+<div class="ticket-wrapper">
+	<h3 (click)="close();">x</h3>
+	<br>
+	<p>Tiket information</p>
+	<div class="image-wrapper">
+		<img src="assets/coupon.png">
+		<i>{{ticket.ticketCode}}</i>
+	</div>
+	<h4>{{ticket.locationName}}</h4>
+	<p>{{ticket.description}}</p>
+	<p>Province: {{ticket.province}}</p>
+	<p>Distance: {{ticket.distance}}</p>
+	<p>Tickets: {{ticket.tickets}}</p>
+	<p>Cost: $ {{ticket.overallPrice}}</p>
+</div>

@@ -1,0 +1,14 @@
+<div class="location-wrapper">
+	<h3>{{location.name}}</h3>
+	<p>{{location.description}}</p>
+	<p>Province: {{location.province}}</p>
+	<p>Distance: {{location.distance}}</p>
+	<p>Price: $ {{location.price}}</p>
+
+	<label>Date</label>
+	<input type="date" id="birthdaytime" name="birthdaytime" [(ngModel)]="date">
+	<label>Tickets</label>
+	<input type="number" id="birthdaytime" name="birthdaytime" [(ngModel)]="tickets">
+
+	<button (click)="bookTickets();">Book</button>
+</div>
