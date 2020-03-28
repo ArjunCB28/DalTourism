@@ -3,47 +3,23 @@ from flask_cors import CORS, cross_origin
 import json
 import os
 
-import smtplib, ssl
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-
-
+import smtplib
 
 # 2-factor authentication part
-def sendOTP(receiver_email):
-	port = 465
-	smtp_server = "smtp.gmail.com"
-	sender_email = "daltourism@gmail.com"
-	sender_password = "Daltourism@123"
-	# receiver_email = "arjuncb28@gmail.com"
-	otp = "847534"
+fromEmail = "daltourism@gmail.com"
+password = "ebsxnukedqyqzmrx"
 
-	message = MIMEMultipart("alternative")
-	message["Subject"] = "Dal Tourism email validation OTP"
-	message["From"] = sender_email
-	message["To"] = receiver_email
+def sendOTP(emailId, otp):
+	with smtplib.SMTP('smtp.gmail.com',587) as smtp:
+		smtp.ehlo()
+		smtp.starttls()
+		smtp.ehlo()
 
-	text = """\
-	Hi user,
-
-	Your OTP for registering in Dalhousie Tourism is %s
-
-	Thanks,
-	Dalhousie Tourism""" % otp
-	body = MIMEText(text, "plain")
-	message.attach(body)
-
-	context = ssl.create_default_context()
-
-	with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-		try:
-			server.login(sender_email, sender_password)
-			server.sendmail(sender_email, receiver_email, message.as_string())
-		except Exception as e:
-			print("Exception",e)
-			server.quit()
-		finally:
-			server.quit()
+		smtp.login(fromEmail,password)
+		subject = "DalTourism Signup OTP"
+		body = "Your OTP is "+str(otp)
+		msg = f'Subject:{subject}\n\n{body}'
+		smtp.sendmail(fromEmail,emailId,msg)
 # 2-factor authentication ends here
 
 app = Flask(__name__)
