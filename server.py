@@ -112,11 +112,6 @@ def validateOTP():
     optData = decodeData(request.json)
     print("otp in userID",optData)
     cur = mysql.connection.cursor()
-    #rowID=cur.lastrowid
-    #sql_select_query = """select userId from otp where rowId = %s"""
-    #user_id= cur.execute(sql_select_query, (rowID,))
-    #user_id= cur.execute("SELECT userId from otp where rowId=?", (rowID))
-    #cur1 = mysql.connection.cursor()
     cur.execute("SELECT userId from otp WHERE rowId=(SELECT max(rowId) from otp)")
     user_id= cur.fetchall()
     cur.execute("SELECT otp from otp WHERE rowId=(SELECT max(rowId) from otp)")
@@ -181,13 +176,6 @@ def bookTickets():
     cur = mysql.connection.cursor()
     cur.execute("INSERT INTO tickets(userId, locationId, tickets, date, overallCost) VALUES (%s, %s, %s, %s, %s)",(userId,locationId,tickets,date,overallCost))
     mysql.connection.commit()
-    
-    
-    
-    
-     #userID, locationId, No of tickets, OverallCost, Date, one insert query into tickets
-    # TODO optData has otp
-    # TODO replace the above value 0 with the rowId obtained after inserting the data into table
     return requestSuccess
 
 # validate OTP
@@ -195,7 +183,7 @@ def bookTickets():
 @cross_origin()
 def getTickets():
     list_tickets=[]
-    userId = request.args.get('userId')
+    #userId = request.args.get('userId')
     cur = mysql.connection.cursor()
     cur.execute("select locations.name, locations.decription, locations.province, locations.distance, locations.price, tickets.overallCost,tickets.tickets,tickets.userId,tickets.date from locations join tickets on locations.id = tickets.locationId where tickets.userId= (SELECT max(userId) from tickets)")
           
@@ -222,18 +210,6 @@ def getTickets():
     data["status"] = 200
     print("data",data)
     return data
-
-    
-    
-    # replace the below logic with db request
-    #TODO replace the 
-#    with open('ticket.json') as json_file:
-#        ticket = json.load(json_file)
-#        ticket["ticket"] = encodeObj(ticket["ticket"])
-#        data = {}
-#        data["data"] = ticket
-#        data["status"] = 200
-#        return data
 
 
 
