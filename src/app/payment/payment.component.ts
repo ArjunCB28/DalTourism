@@ -31,7 +31,7 @@ export class PaymentComponent implements OnInit {
 	processPayment(){
 		if(this.cardNumber && this.securityCode && this.expMonth && this.expYear){
 			const url : string = "bookTickets";
-			var jsonData = {"userId":this.utils.getUserId(), "locationId": this.utils.getLocation().id,"tickets":this.utils.getTickets(),"date":this.utils.getTicketDate()};
+			var jsonData = {"userId":this.utils.getUserId(), "locationId": this.utils.getLocation().id,"tickets":this.utils.getTickets(),"date":this.utils.getTicketDate(),"overallCost":this.price};
 			this.utils.httpPostRequest(url,jsonData).subscribe(data => {
 				if(data && +data.status === 200){
 					this.router.navigate(['/ticket']);
