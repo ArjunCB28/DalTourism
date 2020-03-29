@@ -51,24 +51,20 @@ loginFailure = {}
 @cross_origin()
 def login():
     loginData = decodeData(request.json)
-    print(loginData)
     emailId=loginData['email']
     password=loginData['password']
     cursor=mysql.connection.cursor()
-    cursor.execute('SELECT userId,emailId,password FROM users WHERE emailId= %s AND password = %s', (emailId, password))
+    cursor.execute('SELECT userId,emailId,password FROM users WHERE emailanId= %s AND password = %s', (emailId, password))
     account=cursor.fetchone()
-    print("account",account)
     if(account is not None):
         if(emailId==account[1] and password==account[2]):
-            print("Login Successful")
+            otp=randint(10000,70000)
+            sendOTP(emailId, otp)
             return requestSuccess
         else:
-            print("Login Not successfull")
+            return requestFailed
     else:
-         print("Login Not successfull")
          return requestFailed
-    # TODO loginData has username and password.
-    # check it against database and return requestSuccess/requestFailed
     requestSuccess["userId"] = account[0]
     return requestSuccess
 
@@ -77,58 +73,35 @@ def login():
 @cross_origin()
 def signup():
     signUpData = decodeData(request.json)
-    print(signUpData)
     firstName = signUpData['firstName']
     lastName  = signUpData['lastName']
     emailId = signUpData['emailId']
     password=signUpData['password']
-    print("type of password",type(password))
     cur = mysql.connection.cursor()
     cur.execute("INSERT INTO users(firstName, lastName, emailId, password) VALUES (%s, %s, %s, %s)",(firstName,lastName,emailId,password))
-    otp=randint(50000,70000)
-    #cur.execute("INSERT INTO otp(userId, emailId, password) VALUES (%s, %s, %s)",(userId,emailId,password))
+    otp=randint(10000,70000)
     sendOTP(emailId, otp)
-
-    # TODO signUpData has firstname, lastname, email and password. store this in db
-    # call 2 factor authentication
     userId= cur.lastrowid
-    print("cursor last rowID",cur.lastrowid)
     requestSuccess["userId"] = userId
     cur.execute("INSERT INTO otp(userId, emailId, otp) VALUES (%s, %s, %s)",(userId,emailId,otp))
     mysql.connection.commit()
     cur.close()
-    # TODO signUpData has firstname, lastname, email and password. store this in db
-    # call 2 factor authentication
-    #requestSuccess["userId"] = 1
-    # TODO replace the above value 0 with the rowId obtained after inserting the data into table
     return requestSuccess
 
 # validate OTP
 @app.route('/validateOTP', methods = ['POST'])
 @cross_origin()
 def validateOTP():
-     #userId = request.args.get('userId')
-    #print("userid in validate otp fun",userId)
+    userId = request.args.get('userId')
     optData = decodeData(request.json)
-    print("otp in userID",optData)
     cur = mysql.connection.cursor()
-    #rowID=cur.lastrowid
-    #sql_select_query = """select userId from otp where rowId = %s"""
-    #user_id= cur.execute(sql_select_query, (rowID,))
-    #user_id= cur.execute("SELECT userId from otp where rowId=?", (rowID))
-    #cur1 = mysql.connection.cursor()
-    cur.execute("SELECT userId from otp WHERE rowId=(SELECT max(rowId) from otp)")
-    user_id= cur.fetchall()
-    cur.execute("SELECT otp from otp WHERE rowId=(SELECT max(rowId) from otp)")
-    otp= cur.fetchall()
-    print("userid from database table otp:",user_id)
-    print("otp from database:",otp)
-    for r in otp:
-        if optData['otp']==r[0]:
-            print("Success")
+    query = "select userId,otp from otp where userId="+str(userId)+" order by rowId desc limit 1";
+    cur.execute(query)
+    queryResult = cur.fetchall()
+    for r in queryResult:
+        if optData['otp']==r[1]:
             return requestSuccess
         else:
-            print("Wrong match")
             return requestFailed
 
 # search for locations endpoint
@@ -139,12 +112,9 @@ def locations():
     dict_items={}
     dict_items['locations']={}
     locationId = request.args.get('id')
-    print(locationId)
     cur = mysql.connection.cursor()
     cur.execute("SELECT * from locations")
-    locations= cur.fetchall()
-    print("tuple",locations)
-    
+    locations= cur.fetchall()    
     for i in range(len(locations)):
        dict_items={
                    'id': locations[i][0],
@@ -155,8 +125,6 @@ def locations():
                      'price':locations[i][5]
              }
        list_1.append(dict_items)
-    #print("list_1",list_1)
-    #locations["locations"] = encodeArray(list_1)
     data = {}
     data["data"] = {"locations":encodeArray(list_1)}
     data["status"] = 200
@@ -169,25 +137,16 @@ def locations():
 def bookTickets():
     val=[]
     tickets = decodeData(request.json)
-    print(tickets)
     for i in tickets.values():
         val.append(i)
     userId = val[0]
     locationId = val[1]
     tickets= val[2]
     date= val[3]
-    print(type(date))
     overallCost=val[4]
     cur = mysql.connection.cursor()
     cur.execute("INSERT INTO tickets(userId, locationId, tickets, date, overallCost) VALUES (%s, %s, %s, %s, %s)",(userId,locationId,tickets,date,overallCost))
     mysql.connection.commit()
-    
-    
-    
-    
-     #userID, locationId, No of tickets, OverallCost, Date, one insert query into tickets
-    # TODO optData has otp
-    # TODO replace the above value 0 with the rowId obtained after inserting the data into table
     return requestSuccess
 
 # validate OTP
@@ -195,7 +154,6 @@ def bookTickets():
 @cross_origin()
 def getTickets():
     list_tickets=[]
-    userId = request.args.get('userId')
     cur = mysql.connection.cursor()
     cur.execute("select locations.name, locations.decription, locations.province, locations.distance, locations.price, tickets.overallCost,tickets.tickets,tickets.userId,tickets.date from locations join tickets on locations.id = tickets.locationId where tickets.userId= (SELECT max(userId) from tickets)")
           
@@ -216,24 +174,10 @@ def getTickets():
         }
         
         list_tickets.append(dict_items1)
-    print("FInalList",list_tickets)    
     data = {}
     data["data"] = {"ticket":encodeObj(list_tickets[0])}
     data["status"] = 200
-    print("data",data)
     return data
-
-    
-    
-    # replace the below logic with db request
-    #TODO replace the 
-#    with open('ticket.json') as json_file:
-#        ticket = json.load(json_file)
-#        ticket["ticket"] = encodeObj(ticket["ticket"])
-#        data = {}
-#        data["data"] = ticket
-#        data["status"] = 200
-#        return data
 
 
 
