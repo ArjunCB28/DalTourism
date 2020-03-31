@@ -2,6 +2,7 @@ from flask import Flask,request
 from flask_cors import CORS, cross_origin
 import json
 import os
+import hashlib
 from random import randint
 
 import smtplib
@@ -51,7 +52,7 @@ loginFailure = {}
 def login():
     loginData = decodeData(request.json)
     emailId=loginData['email']
-    password=loginData['password']
+    password=hashString(loginData['password'])
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT userId,emailId,password FROM users WHERE emailId= %s AND password = %s', (emailId, password))
     account=cursor.fetchone()
@@ -77,7 +78,7 @@ def signup():
     firstName = signUpData['firstName']
     lastName  = signUpData['lastName']
     emailId = signUpData['emailId']
-    password=signUpData['password']
+    password = hashString(signUpData['password'])
     cur = mysql.connection.cursor()
     cur.execute("INSERT INTO users(firstName, lastName, emailId, password) VALUES (%s, %s, %s, %s)",(firstName,lastName,emailId,password))
     otp=randint(10000,70000)
@@ -264,6 +265,10 @@ def decodeData(data):
     for key in data:
         data[key] = decodeString(data[key])
     return data
+
+def hashString(string):
+    # SHA256 encryption used for generating the hash
+    return hashlib.sha256(string.encode('utf-8')).hexdigest()
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
