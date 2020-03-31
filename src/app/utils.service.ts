@@ -12,6 +12,7 @@ export class UtilsService {
 	private baseUrl = "http://127.0.0.1:5000/";
 
 	public destRoute = "/home";
+	public fromRoute = "/home";
 
 	private httpOptions = {
 		headers: new HttpHeaders({

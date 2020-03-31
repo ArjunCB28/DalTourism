@@ -185,9 +185,12 @@ def getTickets():
         } 
         list_tickets.append(dict_items1)
     data = {}
-    data["data"] = {"ticket":encodeObj(list_tickets[0])}
-    data["status"] = 200
-    return data
+    if any(map(len, gettickets)):
+        data["data"] = {"ticket":encodeObj(list_tickets[0])}
+        data["status"] = 200
+        return data
+    else:
+        return requestFailed
 
 # validate OTP
 @app.route('/emailTicket', methods = ['GET'])

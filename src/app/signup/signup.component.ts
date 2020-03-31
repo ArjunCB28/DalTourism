@@ -61,6 +61,7 @@ export class SignupComponent implements OnInit {
 					swal.close();
 					if(data && +data.status === 200){
 						localStorage.setItem('userId', data.userId);
+						this.utils.fromRoute = "signup";
 						this.router.navigate(['/otp']);
 					}
 				});

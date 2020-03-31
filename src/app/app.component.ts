@@ -18,10 +18,16 @@ export class AppComponent {
     this.utils = utils;
   	this.router = router;
   	this.router.navigate(['/home']);
-    var userId = localStorage.getItem('userId');
-    if(userId !== null && +userId !== 0){
-      this.login = true;
-    }
+
+
+    setInterval(() => {
+      var userId = localStorage.getItem('userId');
+      if(userId !== null && +userId !== 0){
+        this.login = true;
+      }
+    }, 3000);
+
+
 
   }
 

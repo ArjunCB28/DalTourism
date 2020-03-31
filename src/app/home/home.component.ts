@@ -58,4 +58,9 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
+	clearSeaerch(){
+		this.searchInput = "";
+		this.getLocations("locations")
+	}
+
 }

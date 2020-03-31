@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UtilsService } from '../utils.service';
 import { Router } from "@angular/router";
+import swal from 'sweetalert2';
 
 @Component({
 	selector: 'app-ticket',
@@ -17,7 +18,16 @@ export class TicketComponent implements OnInit {
 		this.utils.httpGetRequest("getTickets").subscribe(data=>{
 			if(data && +data.status === 200){
 				this.ticket = this.utils.decodeObject(data.data.ticket);
-				console.log(this.ticket);
+			} else {
+				swal.fire({
+					title: "No ticket found",
+					icon: "warning",
+					showConfirmButton: true,
+					allowOutsideClick: false,
+					onClose: () => {
+						this.router.navigate(['/home']);
+					}
+				});
 			}
 		});
 	}

@@ -35,9 +35,10 @@ export class OtpvalidateComponent implements OnInit {
 				const jsonData = {"otp":this.otp};
 				this.utils.httpPostRequest(url, jsonData).subscribe(data => {
 					if(data && +data.status === 200){
+						var titleMessage = (this.utils.fromRoute === "signup") ? "New account created successfully" : "Login successful";
 						swal.close();
 						swal.fire({
-							title: "New account created successfully",
+							title: titleMessage,
 							icon: 'success',
 							showConfirmButton: false,
 							timer: 1000,

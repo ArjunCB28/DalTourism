@@ -48,16 +48,9 @@ export class LoginComponent implements OnInit {
 				this.utils.httpPostRequest(url,jsonData).subscribe(data => {
 					if(data && +data.status === 200){
 						swal.close();
-						swal.fire({
-							title: "Login successful",
-							icon: 'success',
-							showConfirmButton: false,
-							timer: 1000,
-							onClose: () => {
-								localStorage.setItem('userId', data.userId);
-								this.router.navigate([this.utils.destRoute]);
-							}
-						});
+						localStorage.setItem('userId', data.userId);
+						this.utils.fromRoute = "login";
+						this.router.navigate(['/otp']);
 					} else {
 						swal.fire({
 							title: "Invalid login credentials",

@@ -1,22 +1,28 @@
 <div class="home-wrapper">
 	<div class="mobile">
-	    <input type="text" name="" matInput>
+	    <input type="text" name="" placeholder="search your favorite destination" matInput [(ngModel)]="searchInput">
+	    <span (click)="clearSeaerch()" *ngIf="searchInput.length > 0" style="position: relative;left: -25px;padding: 5px; cursor: pointer;">x</span>
+	    <button (click)="searchLocations()">Search</button>
 		<div class="location-wrapper" *ngFor="let location of searchData; index as i; trackBy: trackByFn" (click)="locationSelected(location);">
-			<h4>{{location.name}}</h4> <h4 class="price">$ {{location.price}}</h4>
-			<div>
-				<div class="description">{{location.description}}</div>
-				<div class="province">{{location.province}}&nbsp;{{location.distance}}</div>
+			<img [src]="location.url">
+			<div class="details">
+				<h4>{{location.name}}</h4> <h4 class="price">$ {{location.price}}</h4>
+				<div>
+					<div class="description">{{location.description}}</div>
+					<div class="province">{{location.province}}&nbsp;{{location.distance}}</div>
+				</div>
 			</div>
 		</div>
 		<div class="show-tickets" (click)="showTickets()">Tickets</div>
 	</div>
 	<div class="web">
 		<input type="text" name="" matInput placeholder="search your favorite destination" [(ngModel)]="searchInput"> 
+		<span (click)="clearSeaerch()" *ngIf="searchInput.length > 0" style="position: relative;left: -25px;padding: 5px;cursor: pointer;">x</span>
 		<button (click)="searchLocations()">Search</button>
 		<br>
 		<div class="web-location-wrapper" *ngFor="let location of searchData; index as i; trackBy: trackByFn" (click)="locationSelected(location);">
 			<img [src]="location.url">
-			<div class="location-wrapper">
+			<div class="web-location-details">
 				<h4>{{location.name}}</h4> <h4 class="price">$ {{location.price}}</h4>
 				<div>
 					<div class="description">{{location.description}}</div>
