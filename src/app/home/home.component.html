@@ -22,7 +22,7 @@
 		<br>
 		<div class="web-location-wrapper" *ngFor="let location of searchData; index as i; trackBy: trackByFn" (click)="locationSelected(location);">
 			<img [src]="location.url">
-			<div class="web-location-details">
+			<div class="web-location-details" style="width: 50%;">
 				<h4>{{location.name}}</h4> <h4 class="price">$ {{location.price}}</h4>
 				<div>
 					<div class="description">{{location.description}}</div>
