@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from "@angular/router";
 import { FormGroup, FormControl } from '@angular/forms';
+import swal from 'sweetalert2';
 
 
 import { UtilsService } from '../utils.service';
@@ -14,6 +15,7 @@ import { UtilsService } from '../utils.service';
 export class SignupComponent implements OnInit {
 
 	private signupForm : FormGroup;
+	private buttonClicked = false;
 
 	constructor(private router : Router, private utils : UtilsService) {
 		this.router = router;
@@ -32,7 +34,6 @@ export class SignupComponent implements OnInit {
 
 	validateData(): any {
 		if(!this.signupForm.value.firstName || !this.signupForm.value.lastName || !this.signupForm.value.emailId || !this.signupForm.value.password || !this.signupForm.value.repassword){
-			window.alert("Incomplete form");
 			return false;
 		}
 		return true;
@@ -40,15 +41,30 @@ export class SignupComponent implements OnInit {
 
 	onSubmit() {
 		if(!this.validateData()){
+			swal.fire({
+				title: "Invalid form",
+				showConfirmButton: true
+			});
 			return;
 		}
-		const url : string = "signup";
-		this.utils.httpPostRequest(url,this.signupForm.value).subscribe(data => {
-			if(data && +data.status === 200){
-				this.utils.setUserId(data.userId);
-				this.router.navigate(['/otp']);
+		this.buttonClicked = true;
+		swal.fire({
+			title: "Creating new account",
+			showConfirmButton: false,
+			timerProgressBar: true,
+			allowOutsideClick: false,
+			onBeforeOpen: () => {
+				swal.showLoading();
+				const url : string = "signup";
+				this.utils.httpPostRequest(url,this.signupForm.value).subscribe(data => {
+					this.buttonClicked = false;
+					swal.close();
+					if(data && +data.status === 200){
+						localStorage.setItem('userId', data.userId);
+						this.router.navigate(['/otp']);
+					}
+				});
 			}
 		});
 	}
-
 }

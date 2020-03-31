@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { UtilsService } from '../utils.service';
+import swal from 'sweetalert2';
 
 @Component({
 	selector: 'app-login',
@@ -35,12 +36,36 @@ export class LoginComponent implements OnInit {
 		}
 		const url : string = "login";
 		const jsonData = {"email":this.emailId,"password":this.password}
-		this.utils.httpPostRequest(url,jsonData).subscribe(data => {
-			if(data && +data.status === 200){
-				console.log(data.userId)
-				console.log(data)
-				this.utils.setUserId(data.userId);
-				this.router.navigate(['/home']);
+
+		swal.fire({
+			title: "Signing into account",
+			showConfirmButton: false,
+			timerProgressBar: true,
+			allowOutsideClick: false,
+			onBeforeOpen: () => {
+				swal.showLoading();
+				const url : string = "login";
+				this.utils.httpPostRequest(url,jsonData).subscribe(data => {
+					if(data && +data.status === 200){
+						swal.close();
+						swal.fire({
+							title: "Login successful",
+							icon: 'success',
+							showConfirmButton: false,
+							timer: 1000,
+							onClose: () => {
+								localStorage.setItem('userId', data.userId);
+								this.router.navigate([this.utils.destRoute]);
+							}
+						});
+					} else {
+						swal.fire({
+							title: "Invalid login credentials",
+							icon: 'error',
+							showConfirmButton: true
+						});
+					}
+				});
 			}
 		});
 	}

@@ -1,1 +1,12 @@
-<router-outlet></router-outlet>
+<div class="navbar-wrapper">
+	<h2>DalTourism</h2>
+	<div class="web">
+		<h4 (click)="goToPage('/ticket')">Ticket</h4>
+		<h4 (click)="goToPage('/login')" *ngIf="!login">Log in</h4>
+		<h4 (click)="goToPage('/signup')" *ngIf="!login">Sign up</h4>
+		<h4 (click)="logout()" *ngIf="login">Log out</h4>
+	</div>
+</div>
+<div class="content-wrapper">
+	<router-outlet></router-outlet>
+</div>

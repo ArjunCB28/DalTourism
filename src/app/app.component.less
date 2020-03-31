@@ -1,5 +1,6 @@
 
 @navbar-color: #009688; 
+
 .bottom-navbar {
 	height:	60px;
 	width: 100%;
@@ -15,4 +16,44 @@ img {
 	height: 100%;
 	width: 60%;
 	background-color: red;
+}
+
+.navbar-wrapper {
+	background-color: #009688;
+	z-index: 9999;
+	padding: 15px;
+    height: 60px;
+	position: fixed;
+	width: 100%;
+	top: 0px;
+	box-sizing: border-box;
+
+    h2 {
+    	color: white;
+    	margin: 0px;
+    }
+}
+
+.content-wrapper {
+	margin-top: 70px;
+}
+
+.web {
+	position: absolute;
+	top: 25px;
+	right: 60px;
+	h4 {
+		margin: 0px;
+		color: white;
+		display: inline-block;
+		padding: 5px;
+		margin-left: 15px;
+		cursor: pointer;
+	}
+}
+
+@media only screen and (max-width: 600px) {
+	.web {
+		display: none;
+	}
 }

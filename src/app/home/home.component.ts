@@ -13,11 +13,8 @@ export class HomeComponent implements OnInit {
 	private searchInput = "";
 	private selectedData;
 	private searchData = [];
-	constructor(private router : Router, private utils : UtilsService) {
-		this.router = router;
-		this.utils = utils;
 
-		const url : string = "locations";
+	getLocations(url){
 		this.utils.httpGetRequest(url).subscribe(data => {
 			if(data && +data.status === 200){
 				console.log(data.data.locations);
@@ -26,17 +23,39 @@ export class HomeComponent implements OnInit {
 		});
 	}
 
+	constructor(private router : Router, private utils : UtilsService) {
+		this.router = router;
+		this.utils = utils;
+		this.getLocations("locations");
+	}
+
 	ngOnInit() {};
 
 	locationSelected(location){
 		this.utils.setLocation(location);
-		this.router.navigate(['/location']);
+		this.utils.destRoute = "/location";
+		var userId = localStorage.getItem('userId');
+		if(userId !== null && +userId !== 0){
+			this.router.navigate(['/location']);
+		} else {
+			this.router.navigate(['/login']);
+		}
 	};
 
-	inputChanged(){}
+	searchLocations(){
+		if(this.searchInput !== ""){
+			this.getLocations("locations?search="+this.searchInput);
+		}
+	}
 
 	showTickets(){
-		this.router.navigate(['/ticket']);
+		this.utils.destRoute = "/ticket";
+		var userId = localStorage.getItem('userId');
+		if(userId !== null && +userId !== 0){
+			this.router.navigate(['/ticket']);
+		} else {
+			this.router.navigate(['/login']);
+		}
 	}
 
 }

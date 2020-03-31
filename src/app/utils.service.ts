@@ -11,6 +11,8 @@ export class UtilsService {
 	private ticketDate;
 	private baseUrl = "http://127.0.0.1:5000/";
 
+	public destRoute = "/home";
+
 	private httpOptions = {
 		headers: new HttpHeaders({
 			'Content-Type':  'application/json',
@@ -118,10 +120,14 @@ export class UtilsService {
 
 	appendUserId(url){
 		var temp = url.split("?");
+		var userId = localStorage.getItem("userId");
+		if(userId === null){
+			userId = "0";
+		}
 		if(temp.length > 1) {
-			url += "&userId="+this.userId;
+			url += "&userId="+userId;
 		} else {
-			url += "?userId="+this.userId;
+			url += "?userId="+userId;
 		}
 		return url;
 	}

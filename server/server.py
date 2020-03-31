@@ -10,7 +10,6 @@ from flask_mysqldb import MySQL
 # 2-factor authentication part
 fromEmail = "daltourism@gmail.com"
 password = "ebsxnukedqyqzmrx"
-
 def sendOTP(emailId, otp):
     with smtplib.SMTP('smtp.gmail.com',587) as smtp:
         smtp.ehlo()
@@ -54,19 +53,21 @@ def login():
     emailId=loginData['email']
     password=loginData['password']
     cursor=mysql.connection.cursor()
-    cursor.execute('SELECT userId,emailId,password FROM users WHERE emailanId= %s AND password = %s', (emailId, password))
+    cursor.execute('SELECT userId,emailId,password FROM users WHERE emailId= %s AND password = %s', (emailId, password))
     account=cursor.fetchone()
     if(account is not None):
         if(emailId==account[1] and password==account[2]):
+            cur = mysql.connection.cursor()
+            requestSuccess["userId"] = account[0]
             otp=randint(10000,70000)
+            cur.execute("INSERT INTO otp(userId, emailId, otp) VALUES (%s, %s, %s)",(account[0],emailId,otp))
+            mysql.connection.commit()
             sendOTP(emailId, otp)
             return requestSuccess
         else:
             return requestFailed
     else:
          return requestFailed
-    requestSuccess["userId"] = account[0]
-    return requestSuccess
 
 # signup endpoint
 @app.route('/signup', methods = ['POST'])
@@ -98,31 +99,36 @@ def validateOTP():
     query = "select userId,otp from otp where userId="+str(userId)+" order by rowId desc limit 1";
     cur.execute(query)
     queryResult = cur.fetchall()
-    for r in queryResult:
-        if optData['otp']==r[1]:
-            return requestSuccess
-        else:
-            return requestFailed
+    if any(map(len, queryResult)) and optData['otp']==queryResult[0][1]:
+        return requestSuccess
+    else:
+        return requestFailed
 
 # search for locations endpoint
 @app.route('/locations', methods = ['GET'])
 @cross_origin()
 def locations():
+    searchKeyWord = request.args.get('search')
     list_1=[]
     dict_items={}
     dict_items['locations']={}
-    locationId = request.args.get('id')
+    query = ""
+    if searchKeyWord is not None:
+        query = 'select * from locations where province like "%'+searchKeyWord+'%" or name like "%'+searchKeyWord+'%";'
+    else:
+        query = "SELECT * from locations"
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * from locations")
+    cur.execute(query)
     locations= cur.fetchall()    
     for i in range(len(locations)):
        dict_items={
-                   'id': locations[i][0],
-                   'name':locations[i][1],
-                   'description':locations[i][2],
-                    'province':locations[i][3],
-                    'distance':locations[i][4],
-                     'price':locations[i][5]
+            'id': locations[i][0],
+            'name':locations[i][1],
+            'description':locations[i][2],
+            'province':locations[i][3],
+            'distance':locations[i][4],
+            'price':locations[i][5],
+            'url':locations[i][6]
              }
        list_1.append(dict_items)
     data = {}
@@ -135,6 +141,7 @@ def locations():
 @app.route('/bookTickets', methods = ['POST'])
 @cross_origin()
 def bookTickets():
+    cardNumber = request.args.get('cardNumber')
     val=[]
     tickets = decodeData(request.json)
     for i in tickets.values():
@@ -144,19 +151,24 @@ def bookTickets():
     tickets= val[2]
     date= val[3]
     overallCost=val[4]
-    cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO tickets(userId, locationId, tickets, date, overallCost) VALUES (%s, %s, %s, %s, %s)",(userId,locationId,tickets,date,overallCost))
-    mysql.connection.commit()
-    return requestSuccess
+    if cardNumber != "1111111111111111":
+        return requestFailed
+    else:
+        cur = mysql.connection.cursor()
+        ticketCode = str(randint(50000,70000))
+        cur.execute("INSERT INTO tickets(userId, locationId, tickets, date, overallCost, ticketCode) VALUES (%s, %s, %s, %s, %s, %s)",(userId,locationId,tickets,date,overallCost,ticketCode))
+        mysql.connection.commit()
+        return requestSuccess
 
 # validate OTP
 @app.route('/getTickets', methods = ['GET'])
 @cross_origin()
 def getTickets():
+    userId = request.args.get('userId')
     list_tickets=[]
     cur = mysql.connection.cursor()
-    cur.execute("select locations.name, locations.decription, locations.province, locations.distance, locations.price, tickets.overallCost,tickets.tickets,tickets.userId,tickets.date from locations join tickets on locations.id = tickets.locationId where tickets.userId= (SELECT max(userId) from tickets)")
-          
+    query = "select locations.name, locations.decription, locations.province, locations.distance, locations.price, tickets.overallCost,tickets.tickets,tickets.userId,tickets.date, tickets.ticketCode from locations join tickets on locations.id = tickets.locationId where tickets.userId="+userId+" order by tickets.ticketId desc limit 1"
+    cur.execute(query)
     gettickets= cur.fetchall()
     for i in range(len(gettickets)):
         dict_items1={
@@ -169,17 +181,46 @@ def getTickets():
             'price': gettickets[i][4],  
             'overallPrice':gettickets[i][5],
             'tickets':gettickets[i][6],
-            'ticketCode': randint(50000,70000)
-            
-        }
-        
+            'ticketCode': gettickets[i][9]
+        } 
         list_tickets.append(dict_items1)
     data = {}
     data["data"] = {"ticket":encodeObj(list_tickets[0])}
     data["status"] = 200
     return data
 
-
+# validate OTP
+@app.route('/emailTicket', methods = ['GET'])
+@cross_origin()
+def emailTicket():
+    userId = request.args.get('userId')
+    query = "select l.name, l.province, t.overallCost, t.tickets, t.date, t.ticketCode from locations as l join tickets as t on l.id = t.locationId where t.userId = "+userId+" order by t.ticketId desc limit 1;"
+    cur = mysql.connection.cursor()
+    cur.execute(query)
+    gettickets= cur.fetchall()
+    emailBody = "Your ticket: \n\n"
+    for i in range(len(gettickets)):
+        emailBody += "Place: "+gettickets[i][0]
+        emailBody += "\nProvince: "+gettickets[i][1]
+        emailBody += "\nOverall Cost: "+gettickets[i][2]
+        emailBody += "\nTickets: "+gettickets[i][3]
+        emailBody += "\nDate: "+gettickets[i][4]
+        emailBody += "\nTicket Code: "+gettickets[i][5]
+    emailQuery = "select emailId from users where userId="+userId
+    cur.execute(emailQuery)
+    emailId = cur.fetchall()
+    emailId = emailId[0][0]
+    with smtplib.SMTP('smtp.gmail.com',587) as smtp:
+        smtp.ehlo()
+        smtp.starttls()
+        smtp.ehlo()
+        smtp.login(fromEmail,password)
+        subject = "Ticket Confirmation"
+        body = emailBody
+        msg = f'Subject:{subject}\n\n{body}'
+        smtp.sendmail(fromEmail,emailId,msg)
+    print(emailId)
+    return requestSuccess
 
 def encodeString(string):
     outputString = ""

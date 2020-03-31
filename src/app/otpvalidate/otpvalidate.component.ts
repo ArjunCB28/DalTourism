@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UtilsService } from '../utils.service';
 import { Router } from "@angular/router";
+import swal from 'sweetalert2';
 
 @Component({
 	selector: 'app-otpvalidate',
@@ -13,8 +14,8 @@ export class OtpvalidateComponent implements OnInit {
 	constructor(private utils : UtilsService, private router : Router) {
 		this.utils = utils;
 		this.router = router;
-
-		if(this.utils.getUserId() === 0){
+		var userId = localStorage.getItem('userId');
+		if(userId === null || +userId === 0){
 			this.router.navigate(['/login']);
 		}
 	}
@@ -23,12 +24,38 @@ export class OtpvalidateComponent implements OnInit {
 	}
 
 	validate(){
-		const url : string = "validateOTP"
-		const jsonData = {"otp":this.otp};
-		this.utils.httpPostRequest(url, jsonData).subscribe(data => {
-			if(data && +data.status === 200){
-				this.router.navigate(['/home']);
+		swal.fire({
+			title: "Validating OTP",
+			showConfirmButton: false,
+			timerProgressBar: true,
+			allowOutsideClick: false,
+			onBeforeOpen: () => {
+				swal.showLoading();
+				const url : string = "validateOTP"
+				const jsonData = {"otp":this.otp};
+				this.utils.httpPostRequest(url, jsonData).subscribe(data => {
+					if(data && +data.status === 200){
+						swal.close();
+						swal.fire({
+							title: "New account created successfully",
+							icon: 'success',
+							showConfirmButton: false,
+							timer: 1000,
+							onClose: () => {
+								this.router.navigate([this.utils.destRoute]);
+							}
+						});
+					} else {
+						swal.close();
+						swal.fire({
+							title: "Invalid OTP",
+							icon: 'error',
+							showConfirmButton: true
+						});
+					}
+				});
 			}
 		});
+
 	}
 }

@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
+import { UtilsService } from './utils.service';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-root',
@@ -8,19 +10,35 @@ import { Router } from "@angular/router";
 })
 export class AppComponent {
   title = 'DalTourism';
-
-  isMoreOptionsOpen = false;
   selectedCountry = "";
-
+  private login = false;
   ngOnInit() {};
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private utils : UtilsService) {
+    this.utils = utils;
   	this.router = router;
-  	this.router.navigate(['/login']);
+  	this.router.navigate(['/home']);
+    var userId = localStorage.getItem('userId');
+    if(userId !== null && +userId !== 0){
+      this.login = true;
+    }
+
   }
 
-  toggleMoreOptions(){
-  	this.isMoreOptionsOpen = !this.isMoreOptionsOpen;
-  	console.log(this.isMoreOptionsOpen);
+  goToPage(page){
+    this.utils.destRoute = "/home";
+    this.router.navigate([page]);
+  }
+
+  logout(){
+    swal.fire({
+      title: "Logout successful !",
+      showConfirmButton: false,
+      timer: 1000,
+      onClose: ()=>{
+        this.login = false;
+      }
+    });
+    localStorage.setItem('userId', "0");
   }
 }

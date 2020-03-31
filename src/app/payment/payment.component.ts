@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UtilsService } from '../utils.service';
 import { Router } from "@angular/router";
+import swal from 'sweetalert2';
 
 @Component({
 	selector: 'app-payment',
@@ -30,11 +31,38 @@ export class PaymentComponent implements OnInit {
 
 	processPayment(){
 		if(this.cardNumber && this.securityCode && this.expMonth && this.expYear){
-			const url : string = "bookTickets";
-			var jsonData = {"userId":this.utils.getUserId(), "locationId": this.utils.getLocation().id,"tickets":this.utils.getTickets(),"date":this.utils.getTicketDate(),"overallCost":this.price};
-			this.utils.httpPostRequest(url,jsonData).subscribe(data => {
-				if(data && +data.status === 200){
-					this.router.navigate(['/ticket']);
+
+			swal.fire({
+				title: "Processing payment",
+				showConfirmButton: false,
+				timerProgressBar: true,
+				allowOutsideClick: false,
+				onBeforeOpen: () => {
+					swal.showLoading();
+					const url : string = "bookTickets?cardNumber="+this.cardNumber;
+					var jsonData = {"userId":localStorage.getItem("userId"), "locationId": this.utils.getLocation().id,"tickets":this.utils.getTickets(),"date":this.utils.getTicketDate(),"overallCost":this.price};
+
+					this.utils.httpPostRequest(url,jsonData).subscribe(data => {
+						if(data && +data.status === 200){
+							swal.close();
+							swal.fire({
+								title: "Payment Successful",
+								icon: 'success',
+								showConfirmButton: false,
+								timer: 1000,
+								onClose: () => {
+									this.utils.httpGetRequest('emailTicket').subscribe(data => {});
+									this.router.navigate(['/ticket']);
+								}
+							});
+						} else {
+							swal.fire({
+								title: "Invalid card details",
+								icon: 'error',
+								showConfirmButton: true
+							});
+						}
+					});
 				}
 			});
 		}

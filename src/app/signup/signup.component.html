@@ -5,9 +5,9 @@
 			<input class="ng-invalid" type="text" placeholder="first name" formControlName="firstName">
 			<input class="ng-invalid" type="text" placeholder="last name" formControlName="lastName">
 			<input class="ng-invalid" type="text" placeholder="email id" formControlName="emailId">
-			<input class="ng-invalid" type="pasword" placeholder="password" formControlName="password">
-			<input class="ng-invalid" type="pasword" placeholder="re-enter password" formControlName="repassword">
-			<button type="submit" [disabled]="!signupForm.valid">Submit</button>
+			<input class="ng-invalid" type="password" placeholder="password" formControlName="password">
+			<input class="ng-invalid" type="password" placeholder="re-enter password" formControlName="repassword">
+			<button type="submit" [disabled]="buttonClicked">Submit</button>
 		</form>
 	</div>
 </div>
