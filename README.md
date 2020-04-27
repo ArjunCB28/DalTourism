@@ -1,6 +1,6 @@
 # DalTourism
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.3.
+DalTourism is a group project done as a part of Cloud Computing course for Master Of Applied Computing. DalTourism is a tourism app delivered as web and Android application. The development stack includes Angular 8 as hybrid front-end technology and python with Flask as the back-end technology. The application is hosted in AWS ECS through Docker images. The Android application is wrapped up using Cordova. DalTourism lets user search and book tickets to tourist destination in Nova Scotia.
 
 ## Development server
 
